@@ -4,12 +4,29 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from application.core.models import Producto
 from application.core.forms.products_form import ProductoForm
+from django.db.models import Q
 
 class ProductoListView(ListView):
     model = Producto
     template_name = 'core/products/product_list.html'
     context_object_name = 'productos'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')
+
+        if query:
+            queryset = queryset.filter(
+                Q(nombre__icontains=query) |
+                Q(categoria__nombre__icontains=query) |
+                Q(marca__nombre__icontains=query)
+            )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')
+        return context
 class ProductoCreateView(CreateView):
     model = Producto
     form_class = ProductoForm
@@ -20,7 +37,7 @@ class ProductoCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Crear'
         return context
-    
+
     def form_invalid(self, form):
         if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'success': False, 'errors': form.errors}, status=400)

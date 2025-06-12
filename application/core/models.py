@@ -42,7 +42,7 @@ class Marca(models.Model):
 
 # Modelo de Producto
 class Producto(models.Model):
-    nombre = models.CharField(max_length=100, unique=True)
+    nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True)
     cantidad = models.PositiveIntegerField(default=0)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
@@ -52,10 +52,11 @@ class Producto(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='productos') 
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE, null=True, blank=True)
 
-
+    class Meta:
+        unique_together = ('nombre', 'marca')  # <- restricción: nombre + marca únicos
 
     def __str__(self):
-        return self.nombre
+        return f'{self.nombre} - {self.marca}' if self.marca else self.nombre
 
 # Modelo de Carrito
 class Carrito(models.Model):
