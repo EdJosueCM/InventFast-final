@@ -1,0 +1,85 @@
+{% extends 'core/dashboard.html' %}
+{% load static %}
+
+{% block title %}{{ view.title }} Marca{% endblock %}
+{% block page_title %}{{ view.title }} Marca{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="max-w-md mx-auto bg-white p-6 rounded shadow">
+    <h2 class="text-xl font-semibold mb-4">{{ view.title }} Marca</h2>
+
+    <form method="post" id="marcaForm">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="mb-4">
+                <label class="block text-gray-700 font-medium mb-1" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="flex justify-between">
+            <a href="{% url 'core:category_list' %}" class="text-gray-600 hover:underline">← Volver</a>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Guardar
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('marcaForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    fetch('', {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: formData
+    })
+    .then(async response => {
+        if (!response.ok) {
+            const data = await response.json();
+            if (data.errors) {
+                let errorMessages = '';
+                for (const field in data.errors) {
+                    errorMessages += `• ${data.errors[field].join(', ')}\n`;
+                }
+                throw new Error(errorMessages);
+            }
+            throw new Error('Error desconocido');
+        }
+        return response.text();
+    })
+    .then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: '¡Guardado!',
+            text: 'Se ha guardado correctamente.',
+            confirmButtonColor: '#6366F1'
+        }).then(() => {
+            window.location.href = "{% url 'core:category_list' %}";
+        });
+    })
+    .catch((error) => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al guardar',
+            text: error.message,
+            confirmButtonColor: '#EF4444'
+        });
+    });
+
+});
+</script>
+{% endblock %}

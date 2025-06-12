@@ -1,0 +1,27 @@
+{% extends 'core/dashboard.html' %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+Swal.fire({
+    title: '¿Estás seguro?',
+    text: "¡Esta acción no se puede deshacer!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+}).then((result) => {
+    if (result.isConfirmed) {
+        document.getElementById('delete-form').submit();
+    } else {
+        window.location.href = "{% url 'core:product_list' %}";
+    }
+});
+</script>
+
+<form id="delete-form" method="post">
+    {% csrf_token %}
+</form>
+{% endblock %}

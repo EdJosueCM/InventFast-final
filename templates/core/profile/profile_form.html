@@ -1,0 +1,148 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Editar Perfil - InventFast</title>
+    <link rel="icon" type="image/png" href="{% static 'core/img/logo2.png' %}">
+    <link rel="stylesheet" href="{% static 'dist/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-[#0f0f0f] text-white font-sans min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="flex justify-between items-center px-8 py-4 bg-[#17181c]">
+        <a href="{% url 'core:inicio' %}" class="text-white text-xl hover:text-blue-400 transition-transform transform hover:scale-110">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <div class="flex items-center gap-4">
+            <a href="{% url 'core:dashboard' %}" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">Dashboard</a>
+            <div class="relative">
+                <button class="user-btn text-white font-medium flex items-center gap-2">
+                    <i class="fas fa-user"></i> {{ user.first_name|default:user.username }} ⏷
+                </button>
+                <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-[#2d2d2d] text-white rounded-lg p-4 hidden flex-col gap-2 z-50">
+                    <p class="font-semibold text-sm">Perfil</p>
+                    <a href="{% url 'core:profile' %}" class="hover:underline">Administrar perfil</a>
+                    <a href="{% url 'core:reset_password' %}" class="hover:underline">Cambiar contraseña</a>
+                    <a href="{% url 'core:logout' %}" class="hover:underline">Cerrar sesión</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Formulario Editar Perfil -->
+    <main class="flex-grow flex justify-center items-center py-12 px-4">
+        <div class="bg-[#1e1e1e] rounded-2xl shadow-lg p-10 max-w-xl w-full border border-gray-700">
+
+            <h2 class="text-3xl font-bold text-center mb-8">Editar Perfil</h2>
+
+            {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                        <div class="p-2 rounded bg-green-600 text-white">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data" class="space-y-8">
+                {% csrf_token %}
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block mb-2 font-semibold text-gray-300">Nombre</label>
+                        {{ u_form.first_name|add_class:"w-full px-4 py-3 bg-[#121212] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600" }}
+                        {% if u_form.first_name.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ u_form.first_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block mb-2 font-semibold text-gray-300">Apellido</label>
+                        {{ u_form.last_name|add_class:"w-full px-4 py-3 bg-[#121212] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600" }}
+                        {% if u_form.last_name.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ u_form.last_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block mb-2 font-semibold text-gray-300">Correo electrónico</label>
+                        {{ u_form.email|add_class:"w-full px-4 py-3 bg-[#121212] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600" }}
+                        {% if u_form.email.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ u_form.email.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block mb-2 font-semibold text-gray-300">Foto de perfil</label>
+                    {{ p_form.image|add_class:"w-full px-4 py-3 bg-[#121212] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600" }}
+                    {% if p_form.image.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ p_form.image.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="px-10 py-3 bg-blue-600 rounded-full font-semibold hover:bg-blue-700 transition-transform transform hover:scale-105">
+                        Guardar cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="flex flex-wrap justify-around items-start px-10 py-12 bg-[#17181c] text-white text-sm border-t border-gray-700">
+        <div class="min-w-[200px] mb-6">
+            <strong class="block mb-2">Desarrolladores</strong>
+            Cesar Miño<br>
+            Josue Cercado<br>
+            Christina Moina
+        </div>
+        <div class="min-w-[200px] mb-6">
+            <strong class="block mb-2">Contáctanos</strong>
+            +593 961578012<br>
+            cminog@unemi.edu.ec
+        </div>
+        <div class="min-w-[200px] mb-6 text-center">
+            <strong class="block mb-2">© 2025 InventFast. Todos los derechos reservados.</strong>
+        </div>
+        <div class="min-w-[200px] text-right mb-6">
+            <strong class="block mb-2">Nuestras Redes</strong>
+            <div class="flex justify-end gap-4 mt-2 text-lg">
+                <a href="https://twitter.com/" target="_blank" class="hover:text-indigo-400 transition-transform transform hover:scale-110">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.facebook.com/" target="_blank" class="hover:text-indigo-400 transition-transform transform hover:scale-110">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/" target="_blank" class="hover:text-indigo-400 transition-transform transform hover:scale-110">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS Dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btn = document.querySelector('.user-btn');
+            const menu = document.querySelector('.dropdown-menu');
+
+            if (btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                    menu.classList.toggle('flex');
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                        menu.classList.add('hidden');
+                        menu.classList.remove('flex');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

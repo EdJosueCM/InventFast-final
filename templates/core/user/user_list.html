@@ -1,0 +1,29 @@
+{% extends 'core/dashboard.html' %}
+{% load static %}
+
+{% block title %}Usuarios{% endblock %}
+{% block page_title %}Listado de Usuarios{% endblock %}
+
+{% block content %}
+<div class="flex justify-center mt-10 px-4">
+    <div class="w-full max-w-6xl">
+        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Usuarios Registrados</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {% for usuario in usuarios %}
+            <div class="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center text-center">
+                <img src="{{ usuario.profile.image.url }}" alt="Foto de {{ usuario.username }}"
+                    class="w-16 h-16 rounded-full object-cover border border-gray-300 mb-3">
+                <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
+                <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+                <p><strong>Correo:</strong> {{ usuario.email }}</p>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center text-gray-500 italic py-6">
+                No hay usuarios registrados.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

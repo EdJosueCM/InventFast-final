@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'dist/style.css' %}"> <!-- Tailwind -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="flex min-h-screen bg-gray-100 text-gray-800 flex-col">
+
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-[#17181c] text-white flex flex-col relative">
+            <!-- Icono regresar -->
+            <a href="{% url 'core:inicio' %}" 
+               class="absolute top-4 left-4 text-black bg-white bg-opacity-50 p-2 rounded-full hover:bg-opacity-75 z-20 shadow-md transition">
+                <i class="fas fa-arrow-left text-lg"></i>
+            </a>
+
+            <!-- Logo -->
+            <div class="p-6 flex justify-center border-b border-gray-700 relative">
+                <img src="{% static 'core/img/logo.png' %}" alt="Logo" class="w-32">
+            </div>
+
+            <!-- Navegación -->
+            <nav class="flex-1 px-6 py-6 space-y-7">
+                <a href="#" 
+                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
+                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                    <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+                </a>
+                <a href="{% url 'core:product_list' %}" 
+                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
+                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                    <i class="fas fa-warehouse mr-3"></i>Inventario
+                </a>
+                <a href="{% url 'core:catalog_list' %}" 
+                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
+                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                    <i class="fas fa-th-large mr-3"></i>Catálogo
+                </a>
+                <a href="#" 
+                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
+                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                    <i class="fas fa-chart-line mr-3"></i>Reportes
+                </a>
+                <a href="{% url 'core:product_create' %}" 
+                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
+                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                    <i class="fas fa-plus-square mr-3"></i>Productos
+                </a>
+                <a href="{% url 'core:invoice_list' %}" 
+                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
+                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                    <i class="fas fa-receipt mr-3"></i>Facturas
+                </a>
+                <a href="{% url 'core:category_list' %}" 
+                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
+                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                    <i class="fas fa-tags mr-3"></i>Adicional
+                </a>
+                <a href="{% url 'core:user_list' %}" 
+                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
+                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                    <i class="fas fa-user-friends mr-3"></i>Usuarios
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="flex-1 flex flex-col">
+            <!-- Encabezado con fondo relleno y línea abajo -->
+            <header class="bg-[#17181c] p-4 shadow flex items-center justify-between">
+                <h1 class="text-xl font-bold text-white">{% block page_title %}Dashboard{% endblock %}</h1>
+
+                <!-- Botón del carrito pequeño -->
+                <a href="{% url 'core:view_cart' %}"
+                class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-2 rounded-full shadow transition duration-200">
+                    <i class="fas fa-shopping-cart text-base"></i>
+                </a>
+            </header>
+
+            <!-- Área dinámica de contenido -->
+            <section class="p-6 flex-1 bg-white">
+                {% block content %}
+                <p>Bienvenido al panel de control de InventFast.</p>
+                {% endblock %}
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer ancho completo -->
+    <footer class="bg-[#17181c] text-white text-center py-4">
+        <div class="flex justify-center space-x-6 mb-2">
+            <a href="#" class="hover:text-indigo-400"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="hover:text-indigo-400"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="hover:text-indigo-400"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p class="text-sm">&copy; 2025 InventFast. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>

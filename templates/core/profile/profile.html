@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil - InventFast</title>
+    <link rel="icon" type="image/png" href="{% static 'core/img/logo2.png' %}">
+    <link rel="stylesheet" href="{% static 'dist/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="bg-[#0f0f0f] text-white font-sans min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="flex justify-between items-center px-8 py-4 bg-[#17181c]">
+        <!-- Icono de regreso -->
+        <a href="{% url 'core:inicio' %}" class="text-white text-xl hover:text-blue-400 transition-transform transform hover:scale-110">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <!-- Enlaces y menú de usuario -->
+        <div class="flex items-center gap-4">
+            <a href="{% url 'core:dashboard' %}" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">Dashboard</a>
+            <div class="relative">
+                <button class="user-btn text-white font-medium flex items-center gap-2">
+                    <i class="fas fa-user"></i> {{ user.first_name|default:user.username }} ⏷
+                </button>
+                <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-[#2d2d2d] text-white rounded-lg p-4 hidden flex-col gap-2 z-50">
+                    <p class="font-semibold text-sm">Perfil</p>
+                    <a href="{% url 'core:profile' %}" class="hover:underline">Administrar perfil</a>
+                    <a href="{% url 'core:reset_password' %}" class="hover:underline">Cambiar contraseña</a>
+                    <a href="{% url 'core:logout' %}" class="hover:underline">Cerrar sesión</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Perfil -->
+    <main class="flex-grow flex justify-center items-center py-12 px-4">
+        <div class="bg-[#1e1e1e] rounded-2xl shadow-lg p-10 max-w-xl w-full text-center border border-gray-700">
+            {% if messages %}
+                <div class="mb-4">
+                    {% for message in messages %}
+                        <div class="p-2 rounded bg-green-600 text-white">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Foto de perfil -->
+            <div class="mb-6">
+                {% if request.user.profile.image %}
+                    <img src="{{ request.user.profile.image.url }}" alt="Foto de perfil" class="w-32 h-32 rounded-full mx-auto border-4 border-white shadow-md">
+                {% else %}
+                    <img src="{% static 'core/img/default.jpg' %}" alt="Foto de perfil" class="w-32 h-32 rounded-full mx-auto border-4 border-white shadow-md">
+                {% endif %}
+            </div>
+
+            <!-- Info -->
+            <h2 class="text-2xl font-bold mb-2">{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+            <p class="text-gray-300 mb-2"><strong>Usuario:</strong> {{ request.user.username }}</p>
+            <p class="text-gray-300 mb-6"><strong>Email:</strong> {{ request.user.email }}</p>
+
+            <!-- Botón editar -->
+            <a href="{% url 'core:profile_update' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-full transition-transform transform hover:scale-105">
+                Editar Perfil
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="flex flex-wrap justify-around items-start px-10 py-12 bg-[#17181c] text-white text-sm border-t border-gray-700">
+        <div class="min-w-[200px] mb-6">
+            <strong class="block mb-2">Desarrolladores</strong>
+            Cesar Miño<br>
+            Josue Cercado<br>
+            Christina Moina
+        </div>
+        <div class="min-w-[200px] mb-6">
+            <strong class="block mb-2">Contáctanos</strong>
+            +593 961578012<br>
+            cminog@unemi.edu.ec
+        </div>
+        <div class="min-w-[200px] mb-6 text-center">
+            <strong class="block mb-2">© 2025 InventFast. Todos los derechos reservados.</strong>
+        </div>
+        <div class="min-w-[200px] text-right mb-6">
+            <strong class="block mb-2">Nuestras Redes</strong>
+            <div class="flex justify-end gap-4 mt-2 text-lg">
+                <a href="https://twitter.com/" target="_blank" class="hover:text-indigo-400 transition-transform transform hover:scale-110">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.facebook.com/" target="_blank" class="hover:text-indigo-400 transition-transform transform hover:scale-110">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/" target="_blank" class="hover:text-indigo-400 transition-transform transform hover:scale-110">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS Dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btn = document.querySelector('.user-btn');
+            const menu = document.querySelector('.dropdown-menu');
+
+            if (btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                    menu.classList.toggle('flex');
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                        menu.classList.add('hidden');
+                        menu.classList.remove('flex');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
