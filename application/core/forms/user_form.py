@@ -1,12 +1,12 @@
 # forms.py
 from django import forms
 from django.contrib.auth.models import User
-from application.core.models import Profile  # si tienes un modelo separado para la foto
+from application.core.models import Profile 
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['image']  # Cambia 'photo' por 'image'
+        fields = ['image']  
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:

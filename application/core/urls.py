@@ -8,6 +8,7 @@ from application.core.views.category import CategoriaListView, CategoriaCreateVi
 from application.core.views.brand import MarcaListView, MarcaCreateView, MarcaUpdateView, MarcaDeleteView
 from application.core.views.carrito import *
 from application.core.views.invoice import FacturaListView, FacturaDetailView
+from application.core.views.graphics import grafico_stock_view
 from application.security.views import auth
 from inventfast import settings 
 from django.conf.urls.static import static
@@ -60,6 +61,8 @@ urlpatterns = [
     path('invoice_list/', FacturaListView.as_view(), name='invoice_list' ),
     path('invoice_detail/<int:pk>/', FacturaDetailView.as_view(), name='invoice_detail'),
 
+    # Grafico
+    path('graphic_stock/', grafico_stock_view, name='graphic_stock'),
 
     #Password Reset
     path('reset_password/',  
