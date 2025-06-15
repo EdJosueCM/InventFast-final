@@ -5,51 +5,55 @@
 {% block page_title %}Tu Carrito de Compras{% endblock %}
 
 {% block content %}
+<!-- Botón volver (esquina derecha) -->
 <div class="flex justify-end mb-6">
-    <a href="{% url 'core:catalog_list' %}" class="text-indigo-600 hover:underline text-sm flex items-center">
-        <i class="fas fa-arrow-left mr-1"></i> Volver al Catálogo
+    <a href="{% url 'core:catalog_list' %}"
+       class="inline-flex items-center gap-2 bg-white text-indigo-500 border border-indigo-300 px-4 py-2 rounded-lg text-sm font-medium shadow hover:bg-indigo-50 hover:text-indigo-700 transition duration-200">
+        <i class="fas fa-arrow-left"></i>
+        Volver al Catálogo
     </a>
 </div>
 
-<div class="w-full max-w-5xl mx-auto bg-white shadow-md rounded-lg p-6">
-    <h2 class="text-2xl font-bold mb-4 text-gray-800">Productos en tu Carrito</h2>
+<!-- Contenedor principal -->
+<div class="max-w-6xl mx-auto bg-white shadow-xl rounded-2xl p-6 border border-gray-100">
+    <h2 class="text-3xl font-bold mb-6 text-indigo-800 text-center">🛒 Productos en tu Carrito</h2>
 
     {% if items %}
-    <div class="overflow-x-auto">
-        <table class="min-w-full table-auto text-left text-sm">
+    <div class="overflow-x-auto rounded-lg flex justify-center">
+        <table class="w-full max-w-4xl table-auto text-left text-sm border border-gray-200 rounded-xl">
             <thead class="bg-indigo-100 text-indigo-800">
                 <tr>
-                    <th class="px-4 py-2">Imagen</th>
-                    <th class="px-4 py-2">Nombre</th>
-                    <th class="px-4 py-2">Precio</th>
-                    <th class="px-4 py-2">Cantidad</th>
-                    <th class="px-4 py-2">Subtotal</th>
-                    <th class="px-4 py-2 text-center">Acciones</th>
+                    <th class="px-4 py-3">Imagen</th>
+                    <th class="px-4 py-3">Nombre</th>
+                    <th class="px-4 py-3">Precio</th>
+                    <th class="px-4 py-3 text-center">Cantidad</th>
+                    <th class="px-4 py-3">Subtotal</th>
+                    <th class="px-4 py-3 text-center">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y divide-gray-100 bg-white">
                 {% for item in items %}
-                <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-2">
-                        <img src="{{ item.producto.imagen.url }}" class="w-16 h-16 object-contain rounded border border-gray-300 bg-white p-1">
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-4 py-3">
+                        <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}"
+                             class="w-16 h-16 object-contain rounded border border-gray-300 bg-white p-1 shadow-sm">
                     </td>
-                    <td class="px-4 py-2 font-medium text-gray-800">{{ item.producto.nombre }}</td>
-                    <td class="px-4 py-2 text-green-600 font-semibold">${{ item.producto.precio }}</td>
-                    <td class="px-4 py-2">
-                        <form method="POST" action="{% url 'core:update_item' item.id %}" class="flex items-center space-x-1">
+                    <td class="px-4 py-3 font-medium text-gray-800">{{ item.producto.nombre }}</td>
+                    <td class="px-4 py-3 text-green-600 font-semibold">${{ item.producto.precio }}</td>
+                    <td class="px-4 py-3 text-center">
+                        <form method="POST" action="{% url 'core:update_item' item.id %}" class="update-form">
                             {% csrf_token %}
                             <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" max="{{ item.producto.stock }}"
-                                class="w-14 px-1 py-0.5 border rounded text-sm text-center">
-                            <button type="submit" class="bg-gray-200 text-gray-700 px-2 py-0.5 text-xs rounded hover:bg-gray-300">
-                                Actualizar
-                            </button>
+                                class="w-16 px-2 py-1 border rounded text-sm text-center bg-gray-50 focus:ring-2 focus:ring-indigo-300">
                         </form>
                     </td>
-                    <td class="px-4 py-2">${{ item.subtotal }}</td>
-                    <td class="px-4 py-2 text-center">
+                    <td class="px-4 py-3 font-semibold">${{ item.subtotal }}</td>
+                    <td class="px-4 py-3 text-center">
                         <form method="POST" action="{% url 'core:delete_item' item.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="text-red-600 hover:underline text-sm">Eliminar</button>
+                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm transition">
+                                <i class="fas fa-trash-alt mr-1"></i>Eliminar
+                            </button>
                         </form>
                     </td>
                 </tr>
@@ -58,16 +62,31 @@
         </table>
     </div>
 
-    <div class="mt-6 flex justify-between items-center">
-        <p class="text-xl font-semibold">Total: <span class="text-green-600 font-bold">${{ total }}</span></p>
+    <!-- Total y botón de finalizar centrado -->
+    <div class="mt-10 flex flex-col items-center gap-4">
+        <p class="text-xl font-semibold text-gray-800 text-center">
+            Total a pagar: <span class="text-green-600 font-bold">${{ total }}</span>
+        </p>
         <form method="POST" action="{% url 'core:checkout' %}">
             {% csrf_token %}
-            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow transition">Finalizar Compra</button>
+            <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-medium shadow transition">
+                <i class="fas fa-credit-card mr-2"></i> Finalizar Compra
+            </button>
         </form>
     </div>
 
     {% else %}
-        <p class="text-gray-500 italic text-center py-6">Tu carrito está vacío. Agrega productos desde el catálogo.</p>
+        <p class="text-gray-500 italic text-center py-10 text-lg">Tu carrito está vacío. Agrega productos desde el catálogo.</p>
     {% endif %}
 </div>
+
+<!-- JS: auto-submit al cambiar la cantidad -->
+<script>
+    document.querySelectorAll('.update-form input[name="cantidad"]').forEach(input => {
+        input.addEventListener('change', () => {
+            input.closest('form').submit();
+        });
+    });
+</script>
 {% endblock %}

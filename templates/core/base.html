@@ -1,121 +1,88 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="{% static 'dist/style.css' %}"> <!-- Tailwind -->
+    <title>{% block title %}Dashboard{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'core/img/logo2.png' %}">
+    <link rel="stylesheet" href="{% static 'dist/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body class="flex min-h-screen bg-gray-100 text-gray-800 flex-col">
 
     <div class="flex flex-1">
-        <!-- Sidebar -->
         <aside class="w-64 bg-[#17181c] text-white flex flex-col relative">
-            <!-- Icono regresar -->
-            <a href="{% url 'core:inicio' %}" 
-               class="absolute top-4 left-4 text-black bg-white bg-opacity-50 p-2 rounded-full hover:bg-opacity-75 z-20 shadow-md transition">
+            <a href="{% url 'core:inicio' %}" class="absolute top-4 left-4 text-black bg-white bg-opacity-50 p-2 rounded-full hover:bg-opacity-75 z-20 shadow-md transition">
                 <i class="fas fa-arrow-left text-lg"></i>
             </a>
-
-            <!-- Logo -->
             <div class="p-6 flex justify-center border-b border-gray-700 relative">
                 <img src="{% static 'core/img/logo.png' %}" alt="Logo" class="w-32">
             </div>
-
-            <!-- Navegación -->
             <nav class="flex-1 px-6 py-6 space-y-7">
-                <a href="{% url 'core:dashboard' %}" 
-                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
-                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                <a href="{% url 'core:dashboard' %}" class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition hover:bg-indigo-600 hover:text-white hover:pl-6">
                     <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
                 </a>
-                <a href="{% url 'core:product_list' %}" 
-                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
-                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                <a href="{% url 'core:product_list' %}" class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition hover:bg-indigo-600 hover:text-white hover:pl-6">
                     <i class="fas fa-warehouse mr-3"></i>Inventario
                 </a>
-                <a href="{% url 'core:catalog_list' %}" 
-                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
-                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                <a href="{% url 'core:catalog_list' %}" class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition hover:bg-indigo-600 hover:text-white hover:pl-6">
                     <i class="fas fa-th-large mr-3"></i>Catálogo
                 </a>
-                <a href="#" 
-                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
-                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                <a href="{% url 'core:reporte_mas_vendidos' %}" class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition hover:bg-indigo-600 hover:text-white hover:pl-6">
                     <i class="fas fa-chart-line mr-3"></i>Reportes
                 </a>
-                <a href="{% url 'core:product_create' %}" 
-                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
-                        hover:bg-indigo-600 hover:text-white hover:pl-6">
-                    <i class="fas fa-plus-square mr-3"></i>Productos
+                <a href="{% url 'core:product_create' %}" class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition hover:bg-indigo-600 hover:text-white hover:pl-6">
+                    <i class="fas fa-plus-square mr-3"></i>Crear Producto
                 </a>
-                <a href="{% url 'core:invoice_list' %}" 
-                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
-                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                <a href="{% url 'core:invoice_list' %}" class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition hover:bg-indigo-600 hover:text-white hover:pl-6">
                     <i class="fas fa-receipt mr-3"></i>Facturas
                 </a>
-                <a href="{% url 'core:category_list' %}" 
-                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
-                        hover:bg-indigo-600 hover:text-white hover:pl-6">
-                    <i class="fas fa-tags mr-3"></i>Adicional
+                <a href="{% url 'core:category_list' %}" class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition hover:bg-indigo-600 hover:text-white hover:pl-6">
+                    <i class="fas fa-tags mr-3"></i>Categoría & Marca
                 </a>
-                <a href="{% url 'core:user_list' %}" 
-                class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition 
-                        hover:bg-indigo-600 hover:text-white hover:pl-6">
+                <a href="{% url 'core:user_list' %}" class="block bg-white text-[#17181c] font-semibold rounded-xl px-4 py-4 transition hover:bg-indigo-600 hover:text-white hover:pl-6">
                     <i class="fas fa-user-friends mr-3"></i>Usuarios
                 </a>
             </nav>
         </aside>
 
-        <!-- Contenido Principal -->
-        <main class="flex-1 flex flex-col">
-            <!-- Encabezado con fondo relleno y línea abajo -->
-        <header class="bg-[#17181c] p-4 shadow flex items-center justify-between">
-            <!-- Título del panel -->
-            <h1 class="text-xl font-bold text-white">{% block page_title %}Dashboard{% endblock %}</h1>
-
-            <!-- Contenedor de iconos: carrito y notificaciones -->
-            <div class="flex items-center space-x-4">
-                <!-- Carrito -->
-                <a href="{% url 'core:view_cart' %}"
-                class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-2 rounded-full shadow transition duration-200">
-                    <i class="fas fa-shopping-cart text-base"></i>
-                </a>
-
-            <!-- Notificaciones -->
-            <div class="relative">
-                <button id="notifBtn"
-                    class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-2 rounded-full shadow transition duration-200 relative">
-                    <i class="fas fa-bell text-base"></i>
-                    {% if notificaciones %}
-                        <!-- Círculo con número -->
-                        <span id="notifCount"
-                            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                            {{ notificaciones|length }}
+        <main class="flex-1 flex flex-col pt-16">
+            <header class="fixed top-0 left-64 right-0 z-50 bg-[#17181c] p-4 shadow flex items-center justify-between">
+                <h1 class="text-xl font-bold text-white">{% block page_title %}Dashboard{% endblock %}</h1>
+                <div class="flex items-center space-x-4">
+                    <a href="{% url 'core:view_cart' %}" class="relative inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-2 rounded-full shadow transition duration-200">
+                        <i class="fas fa-shopping-cart text-base mr-1.5"></i>
+                        <span id="carrito-count" class="absolute -top-2 -right-3 bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                            {{ carrito_count|default:0 }}
                         </span>
-                    {% endif %}
-                </button>
-
-                <!-- Panel desplegable -->
-               <div id="notifPanel" 
-                    class="hidden absolute right-0 mt-2 bg-white text-gray-800 shadow-lg rounded-xl p-4 z-50 overflow-y-auto"
-                    style="width: 420px; max-height: 30rem;">
-                    <h3 class="text-sm font-semibold text-gray-700 mb-2">Notificaciones</h3>
-                    {% if notificaciones %}
-                        <ul class="space-y-2 text-sm pr-1">
-                            {% for n in notificaciones %}
+                    </a>
+                    <div class="relative">
+                        <button id="notifBtn" class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-2 rounded-full shadow transition duration-200 relative">
+                            <i class="fas fa-bell text-base"></i>
+                            {% if notificaciones %}
+                            <span id="notifCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                                {{ notificaciones|length }}
+                            </span>
+                            {% endif %}
+                        </button>
+                        <div id="notifPanel" class="hidden absolute right-0 mt-2 bg-white text-gray-800 shadow-lg rounded-xl p-4 z-50 overflow-y-auto" style="width: 420px; max-height: 30rem;">
+                            <h3 class="text-sm font-semibold text-gray-700 mb-2">Notificaciones</h3>
+                            {% if notificaciones %}
+                            <ul class="space-y-2 text-sm pr-1">
+                                {% for n in notificaciones %}
                                 <li class="bg-gray-100 p-2 rounded-md shadow-sm">{{ n }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-sm text-gray-500">No hay notificaciones pendientes.</p>
-                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p class="text-sm text-gray-500">No hay notificaciones pendientes.</p>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-            <!-- Área dinámica de contenido -->
             <section class="p-6 flex-1 bg-white">
                 {% block content %}
                 <p>Bienvenido al panel de control de InventFast.</p>
@@ -124,7 +91,6 @@
         </main>
     </div>
 
-    <!-- Footer ancho completo -->
     <footer class="bg-[#17181c] text-white text-center py-4">
         <div class="flex justify-center space-x-6 mb-2">
             <a href="#" class="hover:text-indigo-400"><i class="fab fa-facebook-f"></i></a>
@@ -134,19 +100,18 @@
         <p class="text-sm">&copy; 2025 InventFast. Todos los derechos reservados.</p>
     </footer>
 
+    <script>
+        const notifBtn = document.getElementById('notifBtn');
+        const notifPanel = document.getElementById('notifPanel');
+
+        document.addEventListener('click', function (event) {
+            const clickedInside = notifBtn.contains(event.target) || notifPanel.contains(event.target);
+            if (clickedInside) {
+                notifPanel.classList.toggle('hidden');
+            } else {
+                notifPanel.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
-<script>
-    const notifBtn = document.getElementById('notifBtn');
-    const notifPanel = document.getElementById('notifPanel');
-
-    document.addEventListener('click', function (event) {
-        const clickedInside = notifBtn.contains(event.target) || notifPanel.contains(event.target);
-
-        if (clickedInside) {
-            notifPanel.classList.toggle('hidden');
-        } else {
-            notifPanel.classList.add('hidden');
-        }
-    });
-</script>
 </html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Ganancias</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+            color: #222;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        th, td {
+            border: 1px solid #555;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        img {
+            display: block;
+            margin: 40px auto 0;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reporte de Ganancias por Mes - {{ anio }}</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Mes</th>
+                <th>Ganancia ($)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ganancias %}
+            <tr>
+                <td>{{ item.mes }}</td>
+                <td>{{ item.total|floatformat:"2" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if chart_image %}
+        <img src="{{ chart_image }}" alt="Gráfico de Ganancias">
+    {% endif %}
+</body>
+</html>

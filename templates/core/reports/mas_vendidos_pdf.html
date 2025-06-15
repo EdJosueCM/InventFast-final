@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte Productos Más Vendidos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            border: 1px solid #333;
+            text-align: left;
+        }
+
+        .chart {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .chart img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Top 10 Productos Más Vendidos - {{ nombre_mes }} {{ anio }}</h1>
+
+    <!-- ✅ Tabla de productos -->
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Marca</th>
+                <th>Unidades Vendidas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in productos %}
+            <tr>
+                <td>{{ item.producto__nombre }}</td>
+                <td>{{ item.producto__marca__nombre }}</td>
+                <td>{{ item.total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ✅ Imagen del gráfico -->
+    {% if chart_image %}
+    <div class="chart">
+        <h2>Gráfico de Barras</h2>
+        <img src="{{ chart_image }}" alt="Gráfico de Productos Más Vendidos">
+    </div>
+    {% endif %}
+
+</body>
+
+</html>

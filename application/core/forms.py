@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Carrito
+
 
 class CustomUserForm(UserCreationForm):
     first_name = forms.CharField(
@@ -47,3 +49,11 @@ class CustomUserForm(UserCreationForm):
         if any(char.isdigit() for char in first_name):
             raise forms.ValidationError("El nombre no debe contener números.")
         return first_name
+
+def carrito_count(request):
+    if request.user.is_authenticated:
+        carrito = Carrito.objects.filter(usuario=request.user, comprado=False).first()
+        if carrito:
+            total_items = sum(item.cantidad for item in carrito.items.all())
+            return {'carrito_count': total_items}
+    return {'carrito_count': 0}

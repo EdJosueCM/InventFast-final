@@ -5,25 +5,50 @@
 {% block page_title %}Listado de Usuarios{% endblock %}
 
 {% block content %}
-<div class="flex justify-center mt-10 px-4">
-    <div class="w-full max-w-6xl">
-        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Usuarios Registrados</h2>
+<div class="flex justify-center px-4">
+  <div class="w-full max-w-6xl">
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {% for usuario in usuarios %}
-            <div class="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center text-center">
-                <img src="{{ usuario.profile.image.url }}" alt="Foto de {{ usuario.username }}"
-                    class="w-16 h-16 rounded-full object-cover border border-gray-300 mb-3">
-                <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
-                <p><strong>Usuario:</strong> {{ usuario.username }}</p>
-                <p><strong>Correo:</strong> {{ usuario.email }}</p>
-            </div>
-            {% empty %}
-            <div class="col-span-full text-center text-gray-500 italic py-6">
-                No hay usuarios registrados.
-            </div>
-            {% endfor %}
+    <!-- ✅ Título primero -->
+    <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Usuarios Registrados</h2>
+
+    <!-- ✅ Luego la barra de búsqueda -->
+    <form method="get" class="mb-12 flex justify-center">
+      <div class="relative w-full max-w-md">
+        <input type="text" name="q" value="{{ request.GET.q }}"
+          placeholder="Buscar usuario por nombre, usuario o correo..."
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-gray-800">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 3a7.5 7.5 0 006.15 13.65z" />
+          </svg>
         </div>
+      </div>
+      <button type="submit"
+        class="ml-3 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors duration-300">
+        Buscar
+      </button>
+    </form>
+
+    <!-- Tarjetas de usuarios -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+      {% for usuario in usuarios %}
+      <div class="bg-gray-100 rounded-xl shadow-lg p-4 flex flex-col items-center text-center mt-10">
+
+        <img src="{{ usuario.profile.image.url }}" alt="Foto de {{ usuario.username }}"
+          class="w-16 h-16 rounded-full object-cover border border-gray-300 mb-3">
+        <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
+        <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+        <p><strong>Correo:</strong> {{ usuario.email }}</p>
+      </div>
+      {% empty %}
+      <div class="col-span-full text-center text-gray-500 italic py-6">
+        No hay usuarios registrados.
+      </div>
+      {% endfor %}
     </div>
+
+  </div>
 </div>
 {% endblock %}

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 def user_directory_path(instance, filename):
     # El archivo se subirá a MEDIA_ROOT/profile_pics/user_<id>/<filename>
@@ -47,7 +48,7 @@ class Producto(models.Model):
     descripcion = models.TextField(blank=True)
     cantidad = models.PositiveIntegerField(default=0)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
-    imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
+    imagen = models.ImageField(upload_to='productos/',default='product/default.png', blank=True, null=True)
     fecha_ingreso = models.DateField(auto_now_add=True)
     activo = models.BooleanField(default=True)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='productos') 
@@ -78,7 +79,7 @@ class CarritoItem(models.Model):
     
 class Factura(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    fecha = models.DateTimeField(auto_now_add=True)
+    fecha = models.DateTimeField(default=timezone.now)  
     total = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):

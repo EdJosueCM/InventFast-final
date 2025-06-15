@@ -7,6 +7,9 @@ from django.utils.timezone import now
 from django.db.models.functions import TruncDate
 from django.db.models import Sum
 from django.utils.translation import gettext as _
+from application.core.utils.analytics import *
+from django.db.models import OuterRef, Subquery, IntegerField, Value
+from django.db.models.functions import Coalesce
 
 @login_required
 def dashboard_view(request):
@@ -34,16 +37,17 @@ def dashboard_view(request):
     totales = [float(v['total']) for v in ventas]
     meses = [(i, _(calendar.month_name[i])) for i in range(1, 13)]
 
-    productos_con_menos_ventas = (
-        FacturaDetalle.objects
-        .values('producto__nombre')
-        .annotate(total_vendido=Sum('cantidad'))
-        .order_by('total_vendido')[:5]
-    )
+    ventas_subquery = FacturaDetalle.objects.filter(producto=OuterRef('pk')) \
+        .values('producto') \
+        .annotate(total_vendido=Sum('cantidad')) \
+        .values('total_vendido')
 
-    productos_menos_nombre = [p['producto__nombre'] for p in productos_con_menos_ventas]
-    productos_menos_valor = [p['total_vendido'] or 0 for p in productos_con_menos_ventas]
+    productos_con_menos_ventas = Producto.objects.annotate(
+        total_vendido=Coalesce(Subquery(ventas_subquery, output_field=IntegerField()), Value(0))
+    ).order_by('total_vendido')[:5]
 
+    productos_menos_nombre = [p.nombre for p in productos_con_menos_ventas]
+    productos_menos_valor = [p.total_vendido for p in productos_con_menos_ventas]
     # Notificaciones
     notificaciones = []
 
@@ -62,7 +66,11 @@ def dashboard_view(request):
     for prod in productos_nuevos:
         notificaciones.append(f"🆕 Producto agregado: {prod.nombre}")
 
+    predicciones = predecir_ventas_proximomes()
+    productos_outliers = detectar_outliers_baja_rotacion()
+    recomendaciones = recomendar_reposicion_productos()
     notificaciones.reverse()
+
 
     context = {
         'nombres': nombres,
@@ -74,6 +82,10 @@ def dashboard_view(request):
         'menos_nombres': productos_menos_nombre,
         'menos_cantidades': productos_menos_valor,
         'notificaciones': notificaciones,
+        'predicciones': predicciones,
+        'productos_outliers': productos_outliers,
+        'recomendaciones': recomendaciones,
     }
     
+
     return render(request, 'core/dashboard.html', context)

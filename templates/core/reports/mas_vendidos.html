@@ -1,0 +1,143 @@
+{% extends 'core/dashboard.html' %}
+{% load static %}
+
+{% block title %}Productos Más Vendidos{% endblock %}
+{% block page_title %}Reportes de Ventas{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+
+    <!-- 📊 Top 10 Productos Más Vendidos -->
+    <h2 class="text-xl font-bold text-center mb-6 text-gray-800">
+        Top 10 productos más vendidos - {{ nombre_mes }} {{ fecha_actual|date:"Y" }}
+    </h2>
+
+    <!-- ✅ Selector de mes -->
+    <form method="get" class="flex justify-center items-center gap-2 mb-4">
+        <label class="font-bold">Mes:</label>
+        <select name="mes" onchange="this.form.submit()" class="border rounded px-2 py-1">
+            {% for num, nombre in meses %}
+                <option value="{{ num }}" {% if num == mes %}selected{% endif %}>{{ nombre }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <!-- 🎨 Gráfico de productos -->
+    <canvas id="grafico" height="150"></canvas>
+
+    <!-- ✅ Formulario PDF productos con margen inferior -->
+    <form id="formPdf" method="POST" action="{% url 'core:reporte_mas_vendidos_pdf' %}" class="mb-16">
+        {% csrf_token %}
+        <input type="hidden" name="chart_image" id="chart_image">
+        <input type="hidden" name="mes" value="{{ mes }}">
+        <div class="flex justify-center mt-6">
+            <button type="button" onclick="descargarPdf()"
+                class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition flex items-center gap-2">
+                <i class="fas fa-file-pdf text-white"></i>
+                Descargar PDF Top 10
+            </button>
+        </div>
+    </form>
+
+    <!-- ✅ Espacio adicional antes del siguiente bloque -->
+    <div class="h-16"></div>
+
+    <!-- 📊 Ganancias por Mes -->
+    <h2 class="text-xl font-bold text-center mb-6 text-gray-800">
+        Ganancias por Mes - {{ fecha_actual|date:"Y" }}
+    </h2>
+
+    <!-- 🎨 Gráfico de ganancias -->
+    <canvas id="graficoGanancias" height="150"></canvas>
+
+    <!-- ✅ Formulario PDF ganancias -->
+    <form id="formPdfGanancias" method="POST" action="{% url 'core:reporte_ganancias_pdf' %}">
+        {% csrf_token %}
+        <input type="hidden" name="chart_image" id="chart_image_ganancias">
+        <div class="flex justify-center mt-6">
+            <button type="button" onclick="descargarPdfGanancias()"
+                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition flex items-center gap-2">
+                <i class="fas fa-file-pdf text-white"></i>
+                Descargar PDF Ganancias
+            </button>
+        </div>
+    </form>
+
+</div>
+
+<!-- ✅ Chart.js + Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // 📊 Top 10 Productos
+    const nombres = {{ nombres_json|safe }};
+    const cantidades = {{ cantidades_json|safe }};
+    const ctx = document.getElementById('grafico').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: nombres,
+            datasets: [{
+                label: 'Unidades vendidas',
+                data: cantidades,
+                backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                borderRadius: 8,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: true, position: 'top' } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { precision: 0 }
+                }
+            }
+        }
+    });
+
+    function descargarPdf() {
+        const imgData = document.getElementById('grafico').toDataURL('image/png');
+        document.getElementById('chart_image').value = imgData;
+        document.getElementById('formPdf').submit();
+    }
+
+    // 📈 Gráfico de Ganancias por Mes (tipo área)
+    const labelsGanancias = {{ labels_json|safe }};
+    const valoresGanancias = {{ valores_json|safe }};
+    const ctxGanancias = document.getElementById('graficoGanancias').getContext('2d');
+    const chartGanancias = new Chart(ctxGanancias, {
+        type: 'line',
+        data: {
+            labels: labelsGanancias,
+            datasets: [{
+                label: 'Ganancias ($)',
+                data: valoresGanancias,
+                borderColor: 'rgba(34, 197, 94, 1)',
+                backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true, position: 'top' }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { precision: 0 }
+                }
+            }
+        }
+    });
+
+    function descargarPdfGanancias() {
+        const imgData = document.getElementById('graficoGanancias').toDataURL('image/png');
+        document.getElementById('chart_image_ganancias').value = imgData;
+        document.getElementById('formPdfGanancias').submit();
+    }
+</script>
+{% endblock %}

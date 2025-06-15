@@ -7,3 +7,5 @@ from django.contrib.auth import authenticate, login,logout
 def inicio(request):
     return render(request, 'core/inicio.html')
 
+
+

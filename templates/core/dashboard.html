@@ -6,9 +6,70 @@
 
 {% block content %}
 
+<!-- SECCIÓN DE ANÁLISIS CON SCIKIT-LEARN -->
+
+<!-- PREDICCIÓN DE PRODUCTOS MÁS VENDIDOS -->
+<div class="flex flex-wrap justify-center gap-4 px-4 mt-10">
+    <div class="bg-white shadow-md rounded-xl p-4 w-full max-w-[1280px]">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">📈 Predicción de productos más vendidos</h2>
+
+        {% if predicciones %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                {% for item in predicciones %}
+                    <div class="bg-blue-50 border border-blue-100 shadow rounded-2xl p-4 hover:shadow-md transition">
+                        <h3 class="text-base font-semibold text-blue-800 mb-2 text-center">{{ item.producto.nombre }}</h3>
+                        <p class="text-sm text-gray-700 text-center">
+                            🛒 Estimado: <span class="text-green-600 font-bold">{{ item.prediccion }}</span> unidades
+                        </p>
+                        <p class="text-xs text-gray-400 text-center mt-1">Basado en comportamiento mensual</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-sm text-center w-full">No hay suficientes datos para predecir ventas.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- PRODUCTOS CON BAJA ROTACIÓN -->
+<div class="flex flex-wrap justify-center gap-4 px-4 mt-10">
+    <div class="bg-white shadow-md rounded-xl p-4 w-[40rem]">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">🛑 Productos con baja rotación</h2>
+
+        {% if productos_outliers %}
+            <ul class="list-disc ml-6 text-sm text-red-700">
+                {% for producto in productos_outliers %}
+                    <li><strong>{{ producto.nombre }}</strong> — Stock: {{ producto.cantidad }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 text-sm text-center">No se detectaron productos de baja rotación.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!--- RECOMENDACION DE PRODUCTOS -->
+<div class="flex flex-wrap justify-center gap-4 px-4 mt-10">
+    <div class="bg-white shadow-md rounded-xl p-4 w-[40rem]">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">📦 Recomendaciones de Reposición</h2>
+
+        {% if recomendaciones %}
+            <ul class="list-disc ml-6 text-sm text-blue-800">
+                {% for r in recomendaciones %}
+                    <li>
+                        <strong>{{ r.producto.nombre }}</strong> — Estimado: {{ r.estimado }} / Stock: {{ r.stock }} —
+                        <span class="text-red-600 font-semibold">Reponer: {{ r.reponer }} unidades</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 text-sm text-center">No hay productos urgentes para reponer.</p>
+        {% endif %}
+    </div>
+</div>
+<~
 <!-- CONTENEDOR DE GRÁFICOS -->
-<!-- CONTENEDOR DE GRÁFICOS MÁS PEQUEÑOS -->
-<div class="flex flex-wrap justify-center gap-4 px-4">
+<div class="flex flex-wrap justify-center gap-4 px-4 mt-10">
 
     <!-- GRÁFICO DE STOCK -->
     <div class="bg-white shadow-md rounded-xl p-4 w-[40rem]">
@@ -57,4 +118,5 @@
     window.menosCantidades = {{ menos_cantidades|safe }};
 </script>
 <script src="{% static 'core/js/dashboard_charts.js' %}"></script>
+
 {% endblock %}
